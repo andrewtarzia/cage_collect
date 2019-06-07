@@ -14,7 +14,6 @@ import ccdc.io
 from ase.io import read
 import glob
 import sys
-sys.path.insert(0, '/home/atarzia/thesource/')
 import CSD_f
 
 

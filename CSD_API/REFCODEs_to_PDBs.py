@@ -13,7 +13,6 @@ Date Created: 24 May 2019
 import ccdc.io
 from ase.io import read
 import sys
-sys.path.insert(0, '/home/atarzia/thesource/')
 import CSD_f
 
 

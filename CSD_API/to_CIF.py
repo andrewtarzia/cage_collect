@@ -11,7 +11,6 @@ Date Created: 4 Mar 2019
 
 """
 import ccdc.io
-sys.path.insert(0, '/home/atarzia/thesource/')
 import CSD_f
 
 # read in CSD
