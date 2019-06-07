@@ -13,8 +13,7 @@ Date Created: 04 Mar 2019
 
 import glob
 import sys
-sys.path.insert(0, '/home/atarzia/thesource/')
-from IO_tools import read_cif_pmg
+import atools
 
 
 def write_entry(file, CIF, NA):
@@ -58,7 +57,7 @@ Usage: analyze_CIFs.py DB_file
         print(cif)
         # read in CIF to pymatgen
         try:
-            structure_pmg = read_cif_pmg(cif)
+            structure_pmg = atools.read_cif_pmg(cif)
             # get pymatgen number of atoms
             NA_pmg = len(structure_pmg)
             print(NA_pmg)

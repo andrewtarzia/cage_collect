@@ -19,8 +19,7 @@ from collections import Counter
 import scipy
 import pywindow as pw
 from pywindow.utilities import _FunctionError as _FunctionError
-sys.path.insert(0, '/home/atarzia/thesource/')
-import pywindow_f
+import atools
 
 
 def mod_mod(file):
@@ -411,7 +410,7 @@ def main():
     sys.exit()
 
     logging.info(f'Run with pywindow functions')
-    rbs = pywindow_f.modularize(file=file)
+    rbs = atools.modularize(file=file)
     Mol = rbs.molecules
     count = 0
     for molec in Mol:

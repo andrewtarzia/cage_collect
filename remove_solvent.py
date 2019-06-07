@@ -16,8 +16,7 @@ import logging
 from ase.io import read
 from ase.atoms import Atoms
 import os
-sys.path.insert(0, '/home/atarzia/thesource/')
-import pywindow_f
+import atools
 
 
 def main():
@@ -60,7 +59,7 @@ Usage: remove_solvent.py pdb ignore
         final_struct.set_pbc([True, True, True])
         # view(struct)
         # view(final_struct)
-        rebuilt_structure = pywindow_f.modularize(file=pdb)
+        rebuilt_structure = atools.modularize(file=pdb)
         if rebuilt_structure is None:
             # handle pyWindow failure
             sys.exit(f'pyWindow failure on {pdb}')
@@ -77,9 +76,9 @@ Usage: remove_solvent.py pdb ignore
             logging.info(f'skipping this CIF because modularising failed.')
             logging.info(f'----------------------------------------------')
             continue
-        final_struct = pywindow_f.remove_solvent(pw_struct=rebuilt_structure,
-                                                 ASE_struct=final_struct,
-                                                 mol_list=n_atoms_list)
+        final_struct = atools.remove_solvent(pw_struct=rebuilt_structure,
+                                             ASE_struct=final_struct,
+                                             mol_list=n_atoms_list)
         # only output structures with more than 0 atoms
         if len(final_struct):
             # view(final_struct)

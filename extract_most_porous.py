@@ -14,11 +14,8 @@ Date Created: 23 May 2019
 import logging
 import sys
 import pandas as pd
-import glob
 import os
-sys.path.insert(0, '/home/atarzia/thesource/')
-import pywindow_f
-import IO_tools
+import atools
 
 
 def main():
@@ -58,7 +55,7 @@ def main():
         if os.path.isfile(pdb):
             logging.info(f'> doing {count} of {len(pdbs)}: {RC}')
             # load and modularize pdb
-            rbs = pywindow_f.modularize(file=pdb)
+            rbs = atools.modularize(file=pdb)
             if rbs is None:
                 # handle pyWindow failure
                 raise(f'{pdb} failed modularize!')

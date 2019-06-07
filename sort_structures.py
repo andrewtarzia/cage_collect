@@ -16,9 +16,7 @@ import sys
 import pandas as pd
 import glob
 import os
-sys.path.insert(0, '/home/atarzia/thesource/')
-import pywindow_f
-import IO_tools
+import atools
 
 
 def main():
@@ -64,9 +62,9 @@ def main():
             continue
         if os.path.isfile(file):
             if file_type == 'cif':
-                pdb = IO_tools.convert_CIF_2_PDB(file, wstruct=False)
+                pdb = atools.convert_CIF_2_PDB(file, wstruct=False)
             elif file_type == 'pdb':
-                pdb = IO_tools.check_ASE_handle(file, wstruct=False)
+                pdb = atools.check_ASE_handle(file, wstruct=False)
             if pdb is None:
                 logging.warning(f'> ASE failed to load {file}')
                 # file failed to load in ASE
@@ -76,7 +74,7 @@ def main():
             else:
                 logging.info(f'> doing {count} of {len(files)}')
                 # check if at least one molecule has a pore_diameter_opt > 0.25 angstrom
-                if pywindow_f.check_PDB_for_pore(file=pdb, diam=0.0):
+                if atools.check_PDB_for_pore(file=pdb, diam=0.0):
                     OUTDATA = OUTDATA.append({'file': file, 'deleted': 'N'},
                                              ignore_index=True)
                 else:

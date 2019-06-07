@@ -17,9 +17,7 @@ import os
 import numpy as np
 import glob
 import scipy.spatial.distance as scpy_dist
-sys.path.insert(0, '/home/atarzia/thesource/')
-import pywindow_f
-import IO_tools
+import atools
 
 
 def main():
@@ -38,10 +36,10 @@ def main():
     for cif in CIFs:
         file_prefix = cif.replace('.cif', '')
         output_str += cif + ':\n'
-        pdb = IO_tools.convert_CIF_2_PDB(cif, wstruct=False)
+        pdb = atools.convert_CIF_2_PDB(cif, wstruct=False)
         logging.info(f'> doing {pdb}')
         # modularize
-        RB_s = pywindow_f.modularize(file=pdb)
+        RB_s = atools.modularize(file=pdb)
         logging.info(f'> modularized')
         # run pywindow on each molecule
         for mol in RB_s.molecules:

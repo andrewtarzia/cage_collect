@@ -19,8 +19,7 @@ from collections import Counter
 import pywindow as pw
 from pywindow.utilities import _FunctionError as _FunctionError
 import os
-sys.path.insert(0, '/home/atarzia/thesource/')
-import IO_tools
+import atools
 
 
 def has_bug(pdb):
@@ -347,7 +346,7 @@ def main():
         if cif in done_cifs:
             continue
         if os.path.isfile(cif):
-            pdb = IO_tools.convert_CIF_2_PDB(cif, wstruct=False)
+            pdb = atools.convert_CIF_2_PDB(cif, wstruct=False)
             if pdb is None:
                 logging.warning(f'> ASE failed to load {cif}')
                 OUTDATA = OUTDATA.append({'cif': cif, 'BUG?': 'M'},

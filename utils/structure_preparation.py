@@ -13,9 +13,7 @@ Date Created: 05 Mar 2019
 
 import glob
 import sys
-import pandas as pd
-sys.path.insert(0, '/home/atarzia/thesource/')
-from IO_tools import read_cif_pmg
+import atools
 
 
 def write_entry(file, string):
@@ -116,7 +114,7 @@ Usage: structure_preparation.py out_file
                 f.write(line)
         # read in CIF to pymatgen
         try:
-            structure_pmg = read_cif_pmg(cif, primitive=True)
+            structure_pmg = atools.read_cif_pmg(cif, primitive=True)
             cif_out_string += '- structure read into pymatgen.\n'
             cif_out_string += '- converted to primitive cell and P1 symm. \n'
             cif_out_string += '- saved to ' + cif_out_2 + '. \n'

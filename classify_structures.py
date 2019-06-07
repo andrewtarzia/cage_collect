@@ -15,8 +15,7 @@ import logging
 import sys
 import pandas as pd
 import os
-sys.path.insert(0, '/home/atarzia/thesource/')
-import pywindow_f
+import atools
 
 
 def main():
@@ -58,7 +57,7 @@ def main():
             raise(f'{pdb} not present!')
         logging.info(f'> doing {count} of {len(pdbs)}: {RC}')
         # load and modularize pdb
-        rbs = pywindow_f.modularize(file=pdb)
+        rbs = atools.modularize(file=pdb)
         if rbs is None:
             # handle pyWindow failure
             raise(f'{pdb} failed modularize!')

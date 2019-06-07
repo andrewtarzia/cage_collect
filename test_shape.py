@@ -23,11 +23,7 @@ import glob
 import matplotlib.pyplot as plt
 import json
 import pywindow as pw
-sys.path.insert(0, '/home/atarzia/thesource/')
-import IO_tools
-import plotting
-import pywindow_f
-import stk_f
+import atools
 
 
 def main():
@@ -52,21 +48,21 @@ Usage: test_shape.py
         pdb_file = calc.replace('.cif', '.pdb')
         print(pdb_file, pre_op)
         if os.path.isfile(pdb_file) is False:
-            pdb_file, _ = IO_tools.convert_CIF_2_PDB(calc)
+            pdb_file, _ = atools.convert_CIF_2_PDB(calc)
             if pdb_file is None and _ is None:
                 continue
             del _  # we don't need the ASE structure in this case
         # rebuild system
-        rebuilt_structure = pywindow_f.modularize(file=pdb_file)
+        rebuilt_structure = atools.modularize(file=pdb_file)
         if rebuilt_structure is None:
             # handle pyWindow failure
             sys.exit(f'pyWindow failure on {pdb_file}')
         # run analysis on rebuilt system (extracts all cages)
-        _ = pywindow_f.analyze_rebuilt(rebuilt_structure,
-                                       file_prefix=pre_op,
-                                       atom_limit=20,
-                                       include_coms=False,
-                                       verbose=False)
+        _ = atools.analyze_rebuilt(rebuilt_structure,
+                                   file_prefix=pre_op,
+                                   atom_limit=20,
+                                   include_coms=False,
+                                   verbose=False)
         del _  # not needed
         # determine independant cages based on pore diameters
         # actually, at this stage we just optimize all of them
@@ -85,20 +81,20 @@ Usage: test_shape.py
             # run MD with OPLS if output file does not exist
             if os.path.isfile(newID + '.pdb') is False:
                 print('doing optimization of cage:', ID)
-                stk_f.optimize_structunit(
+                atools.optimize_structunit(
                     infile=ID + '.pdb',
                     outfile=newID + '.pdb',
                     exec='/home/atarzia/software/schrodinger_install',
                     method='OPLS',
-                    settings=stk_f.atarzia_long_MD_settings())
+                    settings=atools.atarzia_long_MD_settings())
                 print('done')
             # analyze optimized cage with pyWindow and output to JSON
             if os.path.isfile(newID + '.json') is False:
                 cagesys = pw.MolecularSystem.load_file(newID + '.pdb')
                 cage = cagesys.system_to_molecule()
-                pywindow_f.analyze_cage(cage=cage,
-                                                propfile=newID + '.json',
-                                                structfile=None)
+                atools.analyze_cage(cage=cage,
+                                    propfile=newID + '.json',
+                                    structfile=None)
             with open(newID + '.json', 'r') as f:
                 data = json.load(f)
             new_pore_diam = data['pore_diameter_opt']['diameter']
@@ -111,7 +107,7 @@ Usage: test_shape.py
         # output plot for each CIF
         plotx = [cage_output[i][0] for i in cage_output]
         ploty = [cage_output[i][1] for i in cage_output]
-        fig, ax = plotting.parity_plot(
+        fig, ax = atools.parity_plot(
             X=plotx, Y=ploty,
             xtitle='XRD pore diameter [$\mathrm{\AA}$]',
             ytitle='opt. pore diameter [$\mathrm{\AA}$]',
