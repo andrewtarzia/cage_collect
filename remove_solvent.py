@@ -15,6 +15,7 @@ import sys
 import logging
 from ase.io import read
 from ase.atoms import Atoms
+from ase.geometry import get_duplicate_atoms
 import os
 import atools
 
@@ -81,6 +82,10 @@ Usage: remove_solvent.py pdb ignore
                                              mol_list=n_atoms_list)
         # only output structures with more than 0 atoms
         if len(final_struct):
+            ###############################################################
+            # should implement a check for duplicated atoms
+            ###############################################################
+            get_duplicate_atoms(atoms=final_struct, cutoff=0.001, delete=True)
             # view(final_struct)
             # output to CIF
             output = pdb.replace('.pdb', '_nosolv.cif')
