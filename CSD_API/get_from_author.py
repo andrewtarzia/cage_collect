@@ -16,18 +16,22 @@ import CSD_f
 
 
 def write_entry(file, author, number, DOI, CSD, solvent, disorder):
-    '''Write entry to CIF DB file that contains all names and references for a
+    """
+    Write entry to CIF DB file that contains information for a
     structure.
 
-    '''
+    """
     with open(file, 'a') as f:
-        f.write(author+','+number+','+DOI+','+CSD+','+solvent+','+disorder+'\n')
+        f.write(
+            f'{author},{number},{DOI},{CSD},{solvent},{disorder}\n'
+        )
 
 
 def write_REFCODES(file, CSD):
-    '''Write REFCODE to file.
+    """
+    Write REFCODE to file.
 
-    '''
+    """
     with open(file, 'a') as f:
         f.write(CSD+'\n')
 
@@ -36,11 +40,13 @@ def main():
     if (not len(sys.argv) == 4):
         print """
     Usage: get_from_author.py author_file cage_type output_prefix
-        author_file (str) - file with list of authors
-        cage_type (str) - organic if organic cages, metal if is_organometallic
-            organic: sets is_organometallic is False
-            metal: sets is_organometallic is True
-            anything else: passes this test
+        author_file (str) -
+            file with list of authors
+        cage_type (str) -
+            organic if organic cages, metal if is_organometallic
+                organic: sets is_organometallic is False
+                metal: sets is_organometallic is True
+                anything else: passes this test
         output_prefix (str) - prefix of .txt and .gcd file to output
         """
         sys.exit()
@@ -80,7 +86,10 @@ def main():
         if len(hits) == 0:
             print(author)
         for hit in hits:
-            author_list = [i.strip() for i in hit.entry.publication.authors.split(',')]
+            author_list = [
+                i.strip()
+                for i in hit.entry.publication.authors.split(',')
+            ]
             # skip polymeric structures
             if hit.entry.chemical_name is not None:
                 if 'catena' in hit.entry.chemical_name:
@@ -114,9 +123,15 @@ def main():
             # write REFCODE to file
             if hit.identifier not in idents:
                 idents.append(hit.identifier)
-                write_entry(out_txt, author, str(hit.entry.ccdc_number),
-                            hit.entry.doi, hit.identifier, solvent,
-                            disorder)
+                write_entry(
+                    out_txt,
+                    author,
+                    str(hit.entry.ccdc_number),
+                    hit.entry.doi,
+                    hit.identifier,
+                    solvent,
+                    disorder
+                )
                 write_REFCODES(out_gcd, hit.identifier)
                 count += 1
 

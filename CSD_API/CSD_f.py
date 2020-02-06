@@ -17,13 +17,14 @@ import os
 
 
 def get_entryreader():
-    '''Get entry reader and updates.
+    """
+    Get entry reader and updates.
 
     Example from
     https://downloads.ccdc.cam.ac.uk/documentation/API/modules/io_api.html#module-ccdc.io
     - .sqlite is known file format, .inf is not.
 
-    '''
+    """
     directory = ccdc.io.csd_directory()
     csd_and_updates = glob.glob(os.path.join(directory, '*.sqlite'))
     csd_and_updates_reader = ccdc.io.EntryReader(csd_and_updates)
@@ -31,9 +32,10 @@ def get_entryreader():
 
 
 def rewrite_pdb(pdb, cell):
-    '''Overwrite structure in pdb with cell parameters.
+    """
+    Overwrite structure in pdb with cell parameters.
 
-    '''
+    """
     s = read(pdb)
     s.set_pbc(True)
     a, b, c, alpha, beta, gamma = cell

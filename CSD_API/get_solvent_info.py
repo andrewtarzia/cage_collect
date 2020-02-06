@@ -3,7 +3,8 @@
 # Distributed under the terms of the MIT License.
 
 """
-Script to convert list of REFCODEs into PDBs. No symm and constraints are applied.
+Script to convert list of REFCODEs into PDBs.
+No symm and constraints are applied.
 
 Author: Andrew Tarzia
 
@@ -21,7 +22,8 @@ def main():
     if (not len(sys.argv) == 2):
         print """
     Usage: get_solvent_info.py file_suffix
-        file_suffix (str) - suffix following REFCODE of files to analyse
+        file_suffix (str) -
+        suffix following REFCODE of files to analyse
             ('_extracted.pdb')
         """
         sys.exit()

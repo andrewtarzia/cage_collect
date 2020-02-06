@@ -3,7 +3,8 @@
 # Distributed under the terms of the MIT License.
 
 """
-Script to convert list of REFCODEs into PDBs. No symm and constraints are applied.
+Script to convert list of REFCODEs into PDBs.
+ No symm and constraints are applied.
 
 Author: Andrew Tarzia
 
@@ -19,10 +20,14 @@ import CSD_f
 def main():
     if (not len(sys.argv) == 4):
         print """
-    Usage: REFCODEs_to_PDBs.py REFCODE_file missing_struct cross_references
-        REFCODE_file (str) - file with list of REFCODEs
-        missing_struct (str) - file with list of REFCODEs with missing structs
-        cross_references (str) - file with list of REFCODEs that require cross_references
+    Usage: REFCODEs_to_PDBs.py REFCODE_file missing_struct
+    cross_references
+        REFCODE_file (str) -
+            file with list of REFCODEs
+        missing_struct (str) -
+            file with list of REFCODEs with missing structs
+        cross_references (str) -
+            file with list of REFCODEs that require cross_references
         """
         sys.exit()
     else:
@@ -47,11 +52,12 @@ def main():
             crystal = entry.crystal
         elif entry.has_3d_structure is False:
             # test if CSD REFCODE is of type XXXXXX01
-            # which implies that XXXXXX will have coordinates and this is a
-            # child entry
+            # which implies that XXXXXX will have coordinates and
+            # this is a child entry
             # only assuming this can be the case a new REFCODE is in
             if len(entry.cross_references) == 0:
-                # print 'struct missing: '+str(RC)+' '+str(entry.ccdc_number)
+                # print 'struct missing: '+str(RC)+' '+
+                # str(entry.ccdc_number)
                 RC_nostruct.append(RC)
                 continue
             else:
@@ -63,25 +69,30 @@ def main():
                             try:
                                 new_entry = entry_reader.entry(ID)
                             except RuntimeError:
-                                # implies this new entry ID is not in the CSD
+                                # implies this new entry ID is not
+                                # in the CSD
                                 RC_nostruct.append(RC)
                                 continue
                             if new_entry.has_3d_structure:
                                 crystal = new_entry.crystal
                                 RC_CR.append((RC, ID))
                                 break
-        # write to CIF - saves as REFCODE in input file even if cross reference
-        # is used
+        # write to CIF - saves as REFCODE in input file even if cross
+        # reference is used
         if crystal is not None:
             packed = crystal.packing()
             ccdc.io.CrystalWriter(RC+'_extracted.pdb').write(packed)
             # use ASE to add cell parameters and resave PDB
-            CELL = [crystal.cell_lengths.a, crystal.cell_lengths.b,
-                    crystal.cell_lengths.c, crystal.cell_angles.alpha,
-                    crystal.cell_angles.beta, crystal.cell_angles.gamma]
+            CELL = [
+                crystal.cell_lengths.a, crystal.cell_lengths.b,
+                crystal.cell_lengths.c, crystal.cell_angles.alpha,
+                crystal.cell_angles.beta, crystal.cell_angles.gamma
+            ]
             CSD_f.rewrite_pdb(pdb=RC+'_extracted.pdb', cell=CELL)
     print '-------------------------------------------------'
-    print 'structures missing: '+str(len(RC_nostruct))+' of '+str(len(REFCODEs))
+    print 'structures missing: '+str(len(RC_nostruct))+' of '+str(
+        len(REFCODEs)
+    )
     with open(missing_struct, 'w') as f:
         for RC in RC_nostruct:
             f.write(RC+'\n')

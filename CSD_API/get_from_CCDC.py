@@ -3,8 +3,8 @@
 # Distributed under the terms of the MIT License.
 
 """
-Script to search for and collect CIFs using CCDC number from manually collated
-list.
+Script to search for and collect CIFs using CCDC number from manually
+collated list.
 
 Author: Andrew Tarzia
 
@@ -16,10 +16,11 @@ import ccdc.search
 
 
 def write_entry(number, DOI, CSD, solvent, disorder):
-    '''Write entry to CIF DB file that contains all names and references for a
+    """
+    Write entry to CIF DB file that contains information for a
     structure.
 
-    '''
+    """
     with open('CIF_DB.txt', 'a') as f:
         f.write(number+','+DOI+','+CSD+','+solvent+','+disorder+'\n')
 
@@ -70,9 +71,16 @@ for i, number in enumerate(numbers):
         # write to CIF
         if hit.identifier not in idents:
             idents.append(hit.identifier)
-            ccdc.io.CrystalWriter(hit.identifier+'.cif').write(crystal.disordered_molecule)
-            write_entry(number, hit.entry.doi, hit.identifier, solvent,
-                        disorder)
+            ccdc.io.CrystalWriter(hit.identifier+'.cif').write(
+                crystal.disordered_molecule
+            )
+            write_entry(
+                number,
+                hit.entry.doi,
+                hit.identifier,
+                solvent,
+                disorder
+            )
             count += 1
 
 print(count, 'cifs found from', count_no, 'CCDC numbers')
