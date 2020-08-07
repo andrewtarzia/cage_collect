@@ -24,16 +24,21 @@ def main():
     if (not len(sys.argv) == 3):
         print("""
 Usage: remove_solvent.py pdb ignore
-    pdb (str) - name of pdb to analyze ('*_extracted.pdb' for all in working dir)
-    ignore (str) - string to use to ignore certain files (set NONE if not used)
+    pdb (str) - name of pdb to analyze
+        ('*_extracted.pdb' for all in working dir)
+    ignore (str) - string to use to ignore certain files
+        (set NONE if not used)
+
     """)
         sys.exit()
     else:
         if '*' in sys.argv[1]:
             from glob import glob
             if sys.argv[2] != 'NONE':
-                pdbs = sorted([i for i in glob(sys.argv[1])
-                               if sys.argv[2] not in i and 'nosolv' not in i])
+                pdbs = sorted([
+                    i for i in glob(sys.argv[1])
+                    if sys.argv[2] not in i and 'nosolv' not in i
+                ])
             else:
                 pdbs = sorted([i for i in glob(sys.argv[1])])
             print('{} pdbs to analyze'.format(len(pdbs)))
@@ -54,7 +59,8 @@ Usage: remove_solvent.py pdb ignore
         # if pdb_file is None and struct is None:
         #     continue
         struct = read(pdb)
-        # get final struct equivalent to input struct, but without atoms
+        # get final struct equivalent to input struct,
+        # but without atoms
         final_struct = Atoms()
         final_struct.set_cell(struct.cell)
         final_struct.set_pbc([True, True, True])
@@ -64,28 +70,46 @@ Usage: remove_solvent.py pdb ignore
         if rebuilt_structure is None:
             # handle pyWindow failure
             sys.exit(f'pyWindow failure on {pdb}')
-        # test if one molecule is huge because disorder breaks pywindow code
+        # test if one molecule is huge because disorder breaks pywindow
+        # code
         no_atoms_orig = len(struct)
         n_atoms_list = []
         for molecule in rebuilt_structure.molecules:
-            n_atoms_list.append(rebuilt_structure.molecules[molecule].no_of_atoms)
+            n_atoms_list.append(
+                rebuilt_structure.molecules[molecule].no_of_atoms
+            )
         max_count = max(n_atoms_list)
         if max_count > no_atoms_orig:
-            logging.info(f'1 UC: {no_atoms_orig} modularized max: {max_count}')
-            # implies that this structure is too disordered for pywindow to handle
-            # sys.exit('skipping this CIF because modularising failed.')
-            logging.info(f'skipping this CIF because modularising failed.')
-            logging.info(f'----------------------------------------------')
+            logging.info(
+                f'1 UC: {no_atoms_orig} modularized max: {max_count}'
+            )
+            # implies that this structure is too disordered for
+            # pywindow to handle
+            # sys.exit(
+            #     'skipping this CIF because modularising failed.'
+            # )
+            logging.info(
+                f'skipping this CIF because modularising failed.'
+            )
+            logging.info(
+                f'----------------------------------------------'
+            )
             continue
-        final_struct = atools.remove_solvent(pw_struct=rebuilt_structure,
-                                             ASE_struct=final_struct,
-                                             mol_list=n_atoms_list)
+        final_struct = atools.remove_solvent(
+            pw_struct=rebuilt_structure,
+            ASE_struct=final_struct,
+            mol_list=n_atoms_list
+        )
         # only output structures with more than 0 atoms
         if len(final_struct):
-            ###############################################################
+            ##########################################################
             # should implement a check for duplicated atoms
-            ###############################################################
-            get_duplicate_atoms(atoms=final_struct, cutoff=0.001, delete=True)
+            ##########################################################
+            get_duplicate_atoms(
+                atoms=final_struct,
+                cutoff=0.001,
+                delete=True
+            )
             # view(final_struct)
             # output to CIF
             output = pdb.replace('.pdb', '_nosolv.cif')
@@ -101,7 +125,5 @@ Usage: remove_solvent.py pdb ignore
 
 
 if __name__ == "__main__":
-    # logging.basicConfig(level=logging.DEBUG, format='%(levelname)s-%(message)s')
-    # logging.debug(f'Debug mode!')
     logging.basicConfig(level=logging.INFO, format='')
     main()
